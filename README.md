@@ -1,38 +1,60 @@
-# NexTask
+# HydraFlow
 
-NexTask is a full-stack task management platform designed to consolidate knowledge in backend development, mobile application architecture, software quality, and automated testing.
+HydraFlow is a full-stack productivity and task management platform designed to consolidate practical experience in modern software engineering, including backend development, web and mobile application architecture, automated testing, software quality, and DevOps practices.
 
-The project consists of a RESTful API built with Spring Boot, a cross-platform mobile client developed with React Native, and an automated testing suite implemented using Pytest. The application allows users to manage tasks, organize priorities, track progress, and analyze productivity metrics.
+The platform consists of:
+
+- A RESTful backend API built with Spring Boot
+- A cross-platform mobile application developed with React Native
+- A web client built with Next.js
+- An automated testing suite implemented with Pytest
+
+HydraFlow enables users to manage tasks, organize priorities, track productivity metrics, and visualize performance through both mobile and web interfaces.
+
+---
 
 ## Architecture
 
-The system follows a distributed client-server architecture composed of three main layers:
+HydraFlow follows a distributed client-server architecture composed of four main layers:
 
-- **Mobile Client**: Cross-platform application responsible for user interaction and API consumption
-- **Backend API**: RESTful service responsible for business rules, authentication, and persistence
-- **Database Layer**: Relational database for structured data storage
+- **Web Client**: Browser-based dashboard and analytics platform
+- **Mobile Client**: Cross-platform application for daily task management
+- **Backend API**: Business logic, authentication, authorization, and persistence
+- **Database Layer**: Relational database for structured storage
 
 ```text
-React Native App
-       |
-       v
-Spring Boot REST API
-       |
-       v
- PostgreSQL Database
+          Next.js Web Client
+                  |
+                  |
+React Native Mobile Client
+                  |
+                  |
+         Spring Boot REST API
+                  |
+                  |
+                MySQL
 ```
+
+---
 
 ## Tech Stack
 
 ### Backend
 - Java 21
 - Spring Boot
-- Spring Web
-- Spring Data JPA
 - Spring Security
-- JWT Authentication
+- Spring Data JPA
 - Hibernate
+- JWT Authentication
 - Maven
+
+### Web
+- Next.js
+- React
+- TypeScript
+- Axios
+- Tailwind CSS
+- Zustand
 
 ### Mobile
 - React Native
@@ -40,17 +62,18 @@ Spring Boot REST API
 - TypeScript
 - React Navigation
 - Axios
-- Zustand / Context API
+- Zustand
 
 ### Database
-- PostgreSQL
+- MySQL
 
 ### Testing
 - Python
 - Pytest
 - Requests
-- Pytest Fixtures
-- API Integration Testing
+- Fixtures
+- Integration Testing
+- API Testing
 
 ### DevOps
 - Docker
@@ -81,16 +104,52 @@ Spring Boot REST API
 - Filtering
 - Search
 
-### Analytics
-- Productivity dashboard
-- Completion metrics
-- Weekly statistics
+### Mobile Features
+- Daily task management
+- Task completion tracking
+- Productivity workflow
+- Push notifications (future)
+
+### Web Features
+- Analytics dashboard
+- Productivity metrics
+- Charts and reports
+- Administrative management
+
+---
+
+## Repository Structure
+
+HydraFlow uses a monorepo strategy to centralize all application layers.
+
+```bash
+hydraflow/
+│
+├── backend/
+├── mobile/
+├── web/
+├── tests/
+├── docs/
+├── scripts/
+├── docker-compose.yml
+├── .env.example
+└── README.md
+```
+
+### Directory Responsibilities
+
+- **backend/** → Spring Boot REST API
+- **mobile/** → React Native application
+- **web/** → Next.js web client
+- **tests/** → Automated tests with Pytest
+- **docs/** → Technical documentation
+- **scripts/** → Utility scripts and automation
 
 ---
 
 ## Backend Architecture
 
-The backend follows a layered architecture to improve maintainability and separation of concerns:
+The backend follows a layered architecture to improve maintainability and separation of concerns.
 
 ```text
 controller/
@@ -100,8 +159,8 @@ entity/
 dto/
 mapper/
 security/
-exception/
 config/
+exception/
 ```
 
 ### Layer Responsibilities
@@ -113,19 +172,26 @@ Handles HTTP requests and responses.
 Contains business rules and application logic.
 
 #### Repository
-Handles database access using JPA.
+Handles persistence and database access using JPA.
+
+#### Entity
+Represents database models.
 
 #### DTO
 Encapsulates request and response payloads.
 
 #### Security
-Responsible for authentication and authorization.
+Handles authentication and authorization.
+
+#### Exception
+Centralizes error handling.
 
 ---
 
 ## Database Model
 
 ### users
+
 | Column | Type |
 |--------|------|
 | id | UUID |
@@ -134,6 +200,7 @@ Responsible for authentication and authorization.
 | password | VARCHAR |
 
 ### tasks
+
 | Column | Type |
 |--------|------|
 | id | UUID |
@@ -145,6 +212,7 @@ Responsible for authentication and authorization.
 | user_id | UUID |
 
 ### subtasks
+
 | Column | Type |
 |--------|------|
 | id | UUID |
@@ -157,12 +225,14 @@ Responsible for authentication and authorization.
 ## API Endpoints
 
 ### Authentication
+
 ```http
 POST /api/auth/register
 POST /api/auth/login
 ```
 
 ### Tasks
+
 ```http
 GET    /api/tasks
 POST   /api/tasks
@@ -172,6 +242,7 @@ PATCH  /api/tasks/{id}/complete
 ```
 
 ### Dashboard
+
 ```http
 GET /api/dashboard
 ```
@@ -180,7 +251,7 @@ GET /api/dashboard
 
 ## Testing Strategy
 
-Automated tests are written using Pytest to validate application behavior.
+Automated tests are written using Pytest to validate API behavior independently from implementation details.
 
 ### Test Categories
 
@@ -188,10 +259,10 @@ Automated tests are written using Pytest to validate application behavior.
 Validate isolated business rules.
 
 #### Integration Tests
-Validate communication between API and database.
+Validate API communication with database and service layer.
 
 #### End-to-End Tests
-Validate complete workflows such as:
+Validate complete workflows:
 
 - User registration
 - Authentication
@@ -226,13 +297,15 @@ This project focuses on software quality attributes such as:
 - Testability
 - Security
 - Performance
+- Reliability
 
 Quality assurance practices include:
 
 - Automated testing
 - Code review
 - Static analysis
-- CI/CD pipeline
+- CI/CD validation
+- Continuous refactoring
 
 ---
 
@@ -245,11 +318,38 @@ The pipeline automates:
 3. Quality validation
 4. Deployment
 
-Example flow:
+Example workflow:
 
 ```text
-Push → Build → Run Tests → Quality Check → Deploy
+Push
+ ↓
+Build
+ ↓
+Run Tests
+ ↓
+Quality Validation
+ ↓
+Deploy
 ```
+
+---
+
+## Architectural Decisions
+
+### Monorepo Strategy
+A monorepo structure was chosen to simplify versioning, documentation, and CI/CD across all application layers.
+
+### Modular Monolith Backend
+The backend follows a modular monolith architecture to reduce complexity while preserving separation of concerns.
+
+### Frontend Separation
+Two frontend clients were designed for different use cases:
+
+- Mobile-first productivity workflows
+- Web-based analytics and administration
+
+### Testing Isolation
+Pytest was chosen to validate API behavior independently from backend implementation details.
 
 ---
 
@@ -258,9 +358,9 @@ Push → Build → Run Tests → Quality Check → Deploy
 - Push notifications
 - Offline mode
 - AI-based prioritization
-- Performance monitoring
-- Kubernetes deployment
 - Observability with logs and metrics
+- Kubernetes deployment
+- Real-time updates using WebSockets
 
 ---
 
@@ -268,12 +368,15 @@ Push → Build → Run Tests → Quality Check → Deploy
 
 This project was created to consolidate practical experience in:
 
-- REST API development
-- Mobile application architecture
-- Software testing
-- Clean architecture
-- Secure authentication
-- DevOps practices
+- REST API development with Spring Boot
+- Mobile development with React Native
+- Modern web development with Next.js
+- Authentication and authorization
+- Automated testing with Pytest
+- CI/CD pipelines
+- Containerization with Docker
+- Full-stack software architecture
+- Software quality engineering
 
 ---
 
